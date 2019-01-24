@@ -25,12 +25,30 @@ const InsertForm = ({title, content, price , onChangeInput, onAdd, error }) => {
                 )}
             </div>
             <form onSubmit = {handleClick} >
-                <input type="text" name="title" value={title} placeholder="제품명" onChange={handleChange} />
-                <input type="text" name="content" value={content} placeholder="상품상세" onChange={handleChange}/>
-                <input type="number" name="price" value={price} placeholder="상품가격" onChange={handleChange}/>
+                <input
+                    type="text"
+                    name="title"
+                    value={title}
+                    placeholder="제품명"
+                    onChange={handleChange} />
+                <textarea
+                    name="content"
+                    value={content}
+                    placeholder="상품상세"
+                    onChange={handleChange}>
+                </textarea>
+
+                <input
+                    type="number"
+                    name="price"
+                    value={price}
+                    placeholder="상품가격"
+                    onChange={handleChange}/>
+                
                 <button type="submit">상품등록</button>
             </form>
         </div>
     );
 };
 export default InsertForm;
+//                <input type="text" name="content" value={content} placeholder="상품상세" onChange={handleChange}/>

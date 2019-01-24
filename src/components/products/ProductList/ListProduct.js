@@ -4,13 +4,15 @@ import classNames from "classnames/bind";
 import ProductItem from "./ProductItem";
 
 const cx = classNames.bind(styles);
-const ListProduct = ({ product, editing, onToggle, onChange }) => {
+const ListProduct = ({ product, editing, onToggle,onClose, onChange, onUpdate }) => {
     const listproduct = product.map((p, i) => {
         return <ProductItem p={p}
                             key={p.id}
                             editing = {editing}
                             onToggle={onToggle}
                             onChange={onChange}
+                            onClose={onClose}
+                            onUpdate={onUpdate}
                             />;
     });
 

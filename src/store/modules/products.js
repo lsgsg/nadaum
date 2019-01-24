@@ -110,7 +110,6 @@ const getProductEpic = (action$,state$) => {
             .pipe(
                 map(response => {
                     const product = response.response; // 넘겨줄 메소드의 매개변수이름과 같아야한다....
-                    console.log(product)
                     return getProductSuccess({product});
                 }),
                 catchError(error =>
@@ -162,7 +161,8 @@ const updateProductEpic = (action$, state$) => {
 
         mergeMap(([action, state])=>{
             return ajax
-            .patch(`/api/product/$[state.products.editing.id]/`,{
+            .patch(`/api/product/${state.products.editing.id}/`,
+            {
                 title : state.products.editing.title,
                 content : state.products.editing.content,
                 price : state.products.editing.price
@@ -213,13 +213,13 @@ export const products = ( state = initialState, action) => {
         case INSERT_PRODUCT :
             let productForm = state.form;
             productForm[action.payload.name] = action.payload.value;
-            // let editForm = state.editing;
-            // editForm[action.payload.name] =
-            //     action.payload.value;
+            let editForm = state.editing;
+            editForm[action.payload.name] =
+                action.payload.value;
             if (action.payload.isEditing){
                 return {
                     ...state,
-                    editing : productForm
+                    editing : editForm
                 };
             }
             return {
@@ -264,9 +264,8 @@ export const products = ( state = initialState, action) => {
             };
         case UPDATE_PRODUCT_SUCCESS :
             const { id, title, content, price } = action.payload.product;
-
-            let products = state.products;
-            let index = products.findeIndex((prod, i) => {
+            let products = state.product;
+            let index = products.findIndex((prod, i) => {
                 return prod.id === id;
             });
             products[parseInt(index, 10)] = {
@@ -283,8 +282,8 @@ export const products = ( state = initialState, action) => {
                     content : "",
                     price : ""
                 },
-                product
-            }
+                product : products
+            };
         case TOGGLE_PRODUCT :
             return {
                 ...state,

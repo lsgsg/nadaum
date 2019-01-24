@@ -32,22 +32,27 @@ export class ProductContainer extends Component {
     }
 
     handleToggle = ({id, title, content, price }) => {
+        const { toggleProduct } = this.props;
+            toggleProduct({id,title, content, price})
+
+
+    }
+
+    handleToggleClose = ({id, title,content,price}) =>{
         const { toggleProduct, editing } = this.props;
         if (editing.id === id) {
             toggleProduct({ id: null,
                             title:"",
                             content:"",
                             price : ""});
-        } else {
-            toggleProduct({id,title, content, price})
+
         }
     }
+
     render(){
         const {title, content, price } = this.props.form;
         const { product,error, editing } = this.props;
-        const {handleChange, addProduct, handleToggle} = this;
-        console.log(editing);
-        console.log(handleToggle);
+        const {handleChange, addProduct, handleToggle, updateProduct, handleToggleClose} = this;
         return (
             <div>
                 <ProductWrapper>
@@ -61,7 +66,9 @@ export class ProductContainer extends Component {
                     <ListProduct product = {product}
                                  editing = {editing}
                                  onToggle = {handleToggle}
+                                 onClose = {handleToggleClose}
                                  onChange={handleChange}
+                                 onUpdate={updateProduct}
                                 />
                 </ProductWrapper>
             </div>
@@ -105,3 +112,12 @@ export default connect(
     mapStateToProps,
     mapDispatchToProps
 )(ProductContainer);
+
+// if (editing.id === id) {
+//     console.log("if!")
+//     toggleProduct({ id: null,
+//                     title:"",
+//                     content:"",
+//                     price : ""});
+//
+// } else {
