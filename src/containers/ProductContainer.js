@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import InsertForm from '../components/products/InsertForm/InsertForm';
 import ProductWrapper from '../components/products/ProductList'
-
+import ListProduct from "../components/products/ProductList/ListProduct";
 import * as productActions from '../store/modules/products';
 
 export class ProductContainer extends Component {
-    handleChange = ({ name, value }) => {
+    handleChange = ({ name, value }, isEditing) => {
         const { insertproduct } = this.props;
-        insertproduct({name, value})
+        insertproduct({name, value},isEditing);
     };
 
     addProduct = () => {
@@ -16,10 +16,38 @@ export class ProductContainer extends Component {
         addProduct();
     }
 
+    componentDidMount(){
+        this.getProduct();
+    }
+
+    getProduct = () => {
+        const { getProduct } = this.props;
+        getProduct();
+    }
+
+
+    updateProduct = () => {
+        const { updateProduct } = this.props;
+        updateProduct();
+    }
+
+    handleToggle = ({id, title, content, price }) => {
+        const { toggleProduct, editing } = this.props;
+        if (editing.id === id) {
+            toggleProduct({ id: null,
+                            title:"",
+                            content:"",
+                            price : ""});
+        } else {
+            toggleProduct({id,title, content, price})
+        }
+    }
     render(){
         const {title, content, price } = this.props.form;
-        const { error } = this.props;
-        const {handleChange, addProduct} = this;
+        const { product,error, editing } = this.props;
+        const {handleChange, addProduct, handleToggle} = this;
+        console.log(editing);
+        console.log(handleToggle);
         return (
             <div>
                 <ProductWrapper>
@@ -29,6 +57,11 @@ export class ProductContainer extends Component {
                                 onChangeInput={handleChange}
                                 onAdd={addProduct}
                                 error = {error}
+                                />
+                    <ListProduct product = {product}
+                                 editing = {editing}
+                                 onToggle = {handleToggle}
+                                 onChange={handleChange}
                                 />
                 </ProductWrapper>
             </div>
@@ -43,19 +76,29 @@ const mapStateToProps = state => ({
         price : state.products.form.price
     },
     product : state.products.product,
-    error : state.products.error
+    error : state.products.error,
+    editing : state.products.editing
 
 });
 
 const mapDispatchToProps = dispatch => {
     return {
-        insertproduct : ({name, value}) => {
-            dispatch(productActions.insertproduct({name, value}))
+        insertproduct : ({name, value}, isEditing) => {
+            dispatch(productActions.insertproduct({name, value}, isEditing))
         },
         addProduct : () => {
             dispatch(productActions.addProduct());
+        },
+        getProduct : () => {
+            dispatch(productActions.getProduct());
+        },
+        toggleProduct: ({id, title, content, price }) => {
+            dispatch(productActions.toggleProduct({ id, title,content,price }));
+        },
+        updateProduct : () => {
+            dispatch(productActions.updateProduct());
         }
-    }
+    };
 }
 
 export default connect(
